@@ -1,0 +1,7 @@
+C:\Users\denis\AppData\Local\Temp\rider-publish2706007214865394939\ReenbitTest.exe
+C:\Users\denis\AppData\Local\Temp\rider-publish2706007214865394939\appsettings.Development.json
+C:\Users\denis\AppData\Local\Temp\rider-publish2706007214865394939\appsettings.json
+C:\Users\denis\AppData\Local\Temp\rider-publish2706007214865394939\ReenbitTest.dll
+C:\Users\denis\AppData\Local\Temp\rider-publish2706007214865394939\ReenbitTest.deps.json
+C:\Users\denis\AppData\Local\Temp\rider-publish2706007214865394939\ReenbitTest.runtimeconfig.json
+C:\Users\denis\AppData\Local\Temp\rider-publish2706007214865394939\ReenbitTest.pdb

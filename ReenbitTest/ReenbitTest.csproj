@@ -6,4 +6,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="DataJuggler.Blazor.FileUpload" Version="7.0.0" />
+    </ItemGroup>
+
 </Project>

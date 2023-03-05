@@ -12,4 +12,7 @@
   <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <SourceRoot Include="C:\Users\denis\.nuget\packages\" />
   </ItemGroup>
+  <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)datajuggler.blazor.fileupload\7.0.0\buildTransitive\DataJuggler.Blazor.FileUpload.props" Condition="Exists('$(NuGetPackageRoot)datajuggler.blazor.fileupload\7.0.0\buildTransitive\DataJuggler.Blazor.FileUpload.props')" />
+  </ImportGroup>
 </Project>
