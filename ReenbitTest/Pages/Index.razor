@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using ReenbitTest.Data
+@using Azure.Storage.Blobs.Specialized
 
 <PageTitle>Index</PageTitle>
 
@@ -11,20 +12,25 @@
     <p>
         <label>
             Enter Email:
-            <InputText @bind-Value="_user.Email" required />
+            <InputText @bind-Value="@_user.Email" required />
         </label>
         <ValidationMessage For="() => _user.Email"></ValidationMessage>
     </p>
     <p>
         <label>
             Select a .docx file:
-            <InputFile @bind-Value="_user.File" accept=".docx" required />
+            <InputFile  @bind-Value="@_user.File" OnChange="OnFileSelected" accept=".docx" required />
         </label>
         <ValidationMessage For="() => _user.File"></ValidationMessage>
     </p>
 
     <button type="submit">Upload</button>
 </EditForm>
+
+@if (WrongFile)
+{
+    <p>Please, select the .docx file</p>
+}
 
 @if (IsUploading)
 {
@@ -36,13 +42,46 @@
     <p>File uploaded successfully!</p>
 }
 
+@if (Exists)
+{
+    <p>File already exists in BLOB storage</p>
+}
+
 @code {
     private User _user = new User();
     private bool IsUploading { get; set; }
     private bool UploadComplete { get; set; }
+    private bool WrongFile { get; set; }
+    private bool Exists { get; set; }
 
+    private void OnFileSelected(InputFileChangeEventArgs e)
+    {
+        _user.File = e.GetMultipleFiles().FirstOrDefault();
+    }
+    
     private async Task HandleValidSubmit()
     {
+        var fileName = _user.File.Name;
+        if(!fileName.EndsWith(".docx"))
+        {
+            WrongFile = true;
+            return;
+        }
+        Exists = false;
+        UploadComplete = false;
+        WrongFile = false;
+        IsUploading = true;
+
+        var storage = new BlobStorage();
+        var blob = storage.container.GetBlobClient(fileName);
+        
+        Exists = storage.container.GetBlockBlobClient(fileName).Exists();
+        if (Exists) return;
+
+        var stream = _user.File.OpenReadStream();
+        await blob.UploadAsync(stream);
+        
+        IsUploading = false;
         UploadComplete = true;
         
         
