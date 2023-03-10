@@ -80,6 +80,7 @@
 
         var stream = _user.File.OpenReadStream();
         await blob.UploadAsync(stream);
+        await blob.SetMetadataAsync(new Dictionary<string, string>() { {"Email", _user.Email} });
         
         IsUploading = false;
         UploadComplete = true;

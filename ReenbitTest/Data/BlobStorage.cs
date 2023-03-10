@@ -5,7 +5,7 @@ namespace ReenbitTest;
 public class BlobStorage
 {
     private string connectionString =
-        "DefaultEndpointsProtocol=https;AccountName=netreenbit;AccountKey=WVk/a6VJhzpjsjvwoffvVtpyOcgrFm2ZQ+sO8Fa/NWN7D8rXar2WdeZBCKQDW4vh2oagn1fCwiem+AStMyPcyQ==;EndpointSuffix=core.windows.net";
+        "DefaultEndpointsProtocol=https;AccountName=reenbitproj;AccountKey=qoKOi0XOtE1iMgQVt4jeQHLD3MVl2HpKrEcLu9NUP3G1T7/3n66pUN2mt6yT93uCUceIRpDbP9MT+AStYEfiPw==;EndpointSuffix=core.windows.net";
     private string containerName = "files";
     public BlobContainerClient container;
     

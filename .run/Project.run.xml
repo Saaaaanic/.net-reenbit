@@ -1,0 +1,7 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Project" type="CompoundRunConfigurationType">
+    <toRun name="EmailFunction" type="LaunchSettings" />
+    <toRun name="ReenbitTest: https" type="LaunchSettings" />
+    <method v="2" />
+  </configuration>
+</component>
