@@ -4,13 +4,20 @@ namespace ReenbitTest;
 
 public class BlobStorage
 {
-    private string connectionString =
-        "DefaultEndpointsProtocol=https;AccountName=reenbitproj;AccountKey=qoKOi0XOtE1iMgQVt4jeQHLD3MVl2HpKrEcLu9NUP3G1T7/3n66pUN2mt6yT93uCUceIRpDbP9MT+AStYEfiPw==;EndpointSuffix=core.windows.net";
-        private string containerName = "files";
+    private string connectionString;
+    private string containerName = "files";
     public BlobContainerClient container;
     
     public BlobStorage()
     {
+        // Get connection string from appsettings.connection.json
+        IConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+        string path = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName, "ReenbitTest");
+        path = Path.Combine(path, "appsettings.connection.json");
+        configurationBuilder.AddJsonFile(path, false);
+        IConfigurationRoot root = configurationBuilder.Build();
+        IConfigurationSection appSettings = root.GetSection("ConnectionStrings:BlobStorageString");
+        connectionString = appSettings.Value;
         container = new BlobContainerClient(connectionString, containerName);
     }
 }
