@@ -1,9 +1,101 @@
 ﻿@page "/"
+@using ReenbitTest.Data
+@using Azure.Storage.Blobs.Specialized
 
-<PageTitle>Index</PageTitle>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h1 class="text-center mb-4">Reenbit test webapp</h1>
 
-<h1>Hello, world!</h1>
+          <EditForm Model="@_user" OnValidSubmit="@HandleValidSubmit">
+            <DataAnnotationsValidator />
 
-Welcome to your new app.
+            <div class="form-group">
+              <label>Enter Email:</label>
+              <InputText class="form-control" @bind-Value="@_user.Email" required />
+              <ValidationMessage For="() => _user.Email"></ValidationMessage>
+            </div>
 
-<SurveyPrompt Title="How is Blazor working for you?"/>
+            <div class="form-group">
+              <label>Select a .docx file:</label>
+              <div class="custom-file">
+                <InputFile class="custom-file-input" @bind-Value="@_user.File" OnChange="OnFileSelected" accept=".docx" required/>
+              </div>
+              <ValidationMessage For="() => _user.File"></ValidationMessage>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-4">Upload</button>
+          </EditForm>
+
+          @if (WrongFile)
+          {
+            <p class="text-danger mt-3">Please select a .docx file</p>
+          }
+
+          @if (IsUploading)
+          {
+            <div class="text-center mt-3">
+              <div class="spinner-border text-primary" role="status">
+              </div>
+              <p>Uploading file...</p>
+            </div>
+          }
+
+          @if (UploadComplete)
+          {
+            <p class="text-success mt-3">File uploaded successfully!</p>
+          }
+
+          @if (Exists)
+          {
+            <p class="text-danger mt-3">File already exists in BLOB storage</p>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@code {
+    private User _user = new User();
+    private bool IsUploading { get; set; }
+    private bool UploadComplete { get; set; }
+    private bool WrongFile { get; set; }
+    private bool Exists { get; set; }
+
+    private void OnFileSelected(InputFileChangeEventArgs e)
+    {
+        _user.File = e.GetMultipleFiles().FirstOrDefault();
+    }
+    
+    private async Task HandleValidSubmit()
+    {
+        var fileName = _user.File.Name;
+        if(!fileName.EndsWith(".docx"))
+        {
+            WrongFile = true;
+            return;
+        }
+        Exists = false;
+        UploadComplete = false;
+        WrongFile = false;
+        IsUploading = true;
+
+        var storage = new BlobStorage();
+        var blob = storage.container.GetBlobClient(fileName);
+        
+        Exists = storage.container.GetBlockBlobClient(fileName).Exists();
+        if (Exists) return;
+
+        var stream = _user.File.OpenReadStream();
+        await blob.UploadAsync(stream);
+        await blob.SetMetadataAsync(new Dictionary<string, string>() { {"Email", _user.Email} });
+        
+        IsUploading = false;
+        UploadComplete = true;
+        
+        
+    }
+}
