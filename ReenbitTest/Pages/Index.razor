@@ -2,50 +2,62 @@
 @using ReenbitTest.Data
 @using Azure.Storage.Blobs.Specialized
 
-<PageTitle>Index</PageTitle>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h1 class="text-center mb-4">Reenbit test webapp</h1>
 
-<h1>Reenbit test webapp</h1>
+          <EditForm Model="@_user" OnValidSubmit="@HandleValidSubmit">
+            <DataAnnotationsValidator />
 
-<EditForm Model="@_user" OnValidSubmit="@HandleValidSubmit">
-    <DataAnnotationsValidator />
+            <div class="form-group">
+              <label>Enter Email:</label>
+              <InputText class="form-control" @bind-Value="@_user.Email" required />
+              <ValidationMessage For="() => _user.Email"></ValidationMessage>
+            </div>
 
-    <p>
-        <label>
-            Enter Email:
-            <InputText @bind-Value="@_user.Email" required />
-        </label>
-        <ValidationMessage For="() => _user.Email"></ValidationMessage>
-    </p>
-    <p>
-        <label>
-            Select a .docx file:
-            <InputFile  @bind-Value="@_user.File" OnChange="OnFileSelected" accept=".docx" required />
-        </label>
-        <ValidationMessage For="() => _user.File"></ValidationMessage>
-    </p>
+            <div class="form-group">
+              <label>Select a .docx file:</label>
+              <div class="custom-file">
+                <InputFile class="custom-file-input" @bind-Value="@_user.File" OnChange="OnFileSelected" accept=".docx" required/>
+              </div>
+              <ValidationMessage For="() => _user.File"></ValidationMessage>
+            </div>
 
-    <button type="submit">Upload</button>
-</EditForm>
+            <button type="submit" class="btn btn-primary btn-block mt-4">Upload</button>
+          </EditForm>
 
-@if (WrongFile)
-{
-    <p>Please, select the .docx file</p>
-}
+          @if (WrongFile)
+          {
+            <p class="text-danger mt-3">Please select a .docx file</p>
+          }
 
-@if (IsUploading)
-{
-    <p>Uploading file...</p>
-}
+          @if (IsUploading)
+          {
+            <div class="text-center mt-3">
+              <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <p>Uploading file...</p>
+            </div>
+          }
 
-@if (UploadComplete)
-{
-    <p>File uploaded successfully!</p>
-}
+          @if (UploadComplete)
+          {
+            <p class="text-success mt-3">File uploaded successfully!</p>
+          }
 
-@if (Exists)
-{
-    <p>File already exists in BLOB storage</p>
-}
+          @if (Exists)
+          {
+            <p class="text-danger mt-3">File already exists in BLOB storage</p>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 @code {
     private User _user = new User();
